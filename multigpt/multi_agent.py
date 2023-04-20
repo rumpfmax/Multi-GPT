@@ -6,6 +6,7 @@ class MultiAgent(Agent):
     def __init__(
             self,
             ai_name,
+            ai_role,
             memory,
             full_message_history,
             prompt,
@@ -20,6 +21,7 @@ class MultiAgent(Agent):
             prompt=prompt,
             user_input=user_input,
         )
+        self.ai_role = ai_role
         self.agent_id = agent_id
         self.auditory_buffer = []  # contains the non processed parts of the conversation
 

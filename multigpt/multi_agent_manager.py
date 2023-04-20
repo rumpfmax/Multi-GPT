@@ -69,6 +69,7 @@ class MultiAgentManager(metaclass=Singleton):
 
         agent = MultiAgent(
             ai_name=expert.ai_name,
+            ai_role=expert.ai_role,
             memory=memory,
             full_message_history=[],
             prompt=prompt,
