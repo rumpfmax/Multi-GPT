@@ -1,3 +1,4 @@
+import json
 import os
 import random
 import re
@@ -185,8 +186,17 @@ class MultiAgentManager(metaclass=Singleton):
                 )  # TODO: This hardcodes the model to use GPT3.5. Make this an argument
 
             # Print Assistant thoughts
-
             assistant_reply_object = print_assistant_thoughts(active_agent.ai_name, assistant_reply)
+
+            # stream
+            with open('./multigpt/interface/message.json', 'w') as f:
+                assistant_state = {
+                    "name": active_agent.ai_name,
+                    "role": active_agent.ai_role,
+                    "reply": assistant_reply_object
+                }
+                json.dump(assistant_state, f)
+
             if assistant_reply_object is not None:
                 try:
                     speak_value = assistant_reply_object.get('thoughts', {}).get('speak')

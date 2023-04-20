@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta http-equiv="Content-Security-Policy">
+    <link href="styles.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,300;0,900;1,300&display=swap"
+          rel="stylesheet">
+    <title lang="en-us">SID</title>
+</head>
+<body>
+<div id="message-screen" class="message-screen">
+    <div id="chat-lhs" class="chat-subcontainer">
+        <div class=chat-header>
+            <h2 class="chat-title" id="chat-title">Achieve World Domination</h2>
+            <div class="return" id="home">
+                <div class="button_with_icon home"></div>
+                <div class="home-text">home</div>
+            </div>
+        </div>
+        <div id="messages-display" class="messages-display">
+        </div>
+        <div id="chat-footer" class="chat-footer">
+            <div class="input-container">
+                <label>
+                    <textarea placeholder="Type your message here..." rows="1"></textarea>
+                </label>
+            </div>
+            <div class="send-button-container">
+                <div class="button_with_icon send" id="send-button"></div>
+            </div>
+        </div>
+    </div>
+    <div id="chat-rhs" class="chat-subcontainer">
+    </div>
+</div>
+<script src="script.js"></script>
+</body>
+<div class="footer">
+    <div>powered by <b>MultiGPT</b> & <b>sidsearch.com</b></div>
+    <div class="logo-right">
+        <img src="imagesignature.png" class="signature" alt="SID">
+        <div class="SID">SID</div>
+    </div>
+</div>
+
+</html>
