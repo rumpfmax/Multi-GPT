@@ -248,8 +248,6 @@ def print_assistant_thoughts(active_agent, assistant_reply):
         if CFG.chat_only_mode:
             if assistant_thoughts_speak is not None and len(assistant_thoughts_speak) > 0:
                 logger.typewriter_log(f"{active_agent.ai_name.upper()}:", Fore.YELLOW, f"{assistant_thoughts_speak}")
-                from multigpt.discord_utils import send_message
-                active_agent.send_message_discord(assistant_thoughts_speak)
         else:
             logger.typewriter_log(
                 f"{active_agent.ai_name.upper()} THOUGHTS:", Fore.YELLOW, f"{assistant_thoughts_text}"

@@ -208,14 +208,17 @@ class MultiAgentManager(metaclass=Singleton):
             if assistant_reply_object is not None:
                 try:
                     speak_value = assistant_reply_object.get('thoughts', {}).get('speak')
-                    with Spinner(f"EVALUATING EMOTIONAL STATE OF {active_agent.ai_name}."):
-                        val = lmql_utils.lmql_get_emotional_state(speak_value)
-                    logger.typewriter_log(
-                        "System: ", Fore.YELLOW,
-                        f"Evaluation complete. {active_agent.ai_name} is feeling '{val}' right now."
-                    )
                     successful = self.send_message_to_all_agents(speaker=active_agent, message=speak_value)
                     if successful:
+                        with Spinner(f"EVALUATING EMOTIONAL STATE OF {active_agent.ai_name}."):
+                            val = lmql_utils.lmql_get_emotional_state(speak_value)
+                        logger.typewriter_log(
+                            "System: ", Fore.YELLOW,
+                            f"Evaluation complete. {active_agent.ai_name} is feeling '{val}' right now."
+                        )
+                        active_agent.set_emotional_state(val)
+                        from multigpt.discord_utils import send_message
+                        active_agent.send_message_discord(speak_value)
                         # Only remove own message from buffer if it was non-empty
                         active_agent.auditory_buffer.pop()
                 except Exception as e:
