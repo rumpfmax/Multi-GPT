@@ -36,7 +36,7 @@ class MultiAgentManager(metaclass=Singleton):
 
         agent_id = self.agent_counter
         self.agent_counter += 1
-        #Initialize system_agent/orchestrator
+        # Initialize system_agent/orchestrator
         memory = get_memory(self.cfg, ai_key=agent_id, init=True)
         if not self.cfg.chat_only_mode:
             logger.typewriter_log(
@@ -308,7 +308,7 @@ class MultiAgentManager(metaclass=Singleton):
                         f"COMMAND = {Fore.CYAN}{command_name}{Style.RESET_ALL}"
                         f"  ARGUMENTS = {Fore.CYAN}{arguments}{Style.RESET_ALL}",
                     )
-                    action_string = f"_{active_agent.ai_name}"
+                    action_string = f"{active_agent.ai_name}"
                     if command_name == 'google':
                         action_string += f" is googling: {arguments['input']}"
                     elif command_name == 'memory_add':
@@ -328,9 +328,8 @@ class MultiAgentManager(metaclass=Singleton):
                     else:
                         action_string = None
                     if action_string is not None:
-                        action_string += "._"
-                        self.system_agent.send_message_discord(action_string)
-
+                        action_string += "."
+                        self.system_agent.send_message_discord("_" + escape_underscores(action_string) + "_")
 
             # Execute command
             if command_name is not None and command_name.lower().startswith("error"):
@@ -369,3 +368,8 @@ class MultiAgentManager(metaclass=Singleton):
                     logger.typewriter_log(
                         "SYSTEM: ", Fore.YELLOW, "Unable to execute command"
                     )
+
+
+def escape_underscores(input_string):
+    escaped_string = input_string.replace('_', "\_")
+    return escaped_string

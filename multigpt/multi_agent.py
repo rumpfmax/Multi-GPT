@@ -25,8 +25,8 @@ class MultiAgent(Agent):
         )
         self.agent_id = agent_id
         self.auditory_buffer = []  # contains the non processed parts of the conversation
-        self.avatar_url_base = 'https://discord-emojis.s3.eu-central-1.amazonaws.com/musk'
-        self.avatar_url = "https://discord-emojis.s3.eu-central-1.amazonaws.com/musk_neutral_1.png"
+        self.avatar_url_base = f'https://discord-emojis.s3.eu-central-1.amazonaws.com/{ai_name[:3].lower()}'
+        self.avatar_url = f'https://discord-emojis.s3.eu-central-1.amazonaws.com/{ai_name[:3].lower()}_neutral_1.png'
         self.webhook_url = 'https://discord.com/api/webhooks/1100404997981749278/TXufpBkW4VsUA-WWEj91ayjTb3WUI7J0I-9IKmu7XLTgoyuQnQgUVbkAEtmk2B_OoyBs'
 
     def receive_message(self, speaker, message):
