@@ -88,7 +88,7 @@ cd Multi-GPT
 pip install -r requirements.txt
 ```
 
-5. Locate the file named `.env.template` in the main `/Auto-GPT` folder.
+5. Locate the file named `.env.template` in the main `/Multi-GPT` folder.
    Create a copy of this file, called `.env` by removing the `template` extension.  The easiest way is to do this in a command prompt/terminal window `cp .env.template .env`
    Open the `.env` file in a text editor.  Note: Files starting with a dot might be hidden by your Operating System.
    Find the line that says `OPENAI_API_KEY=`.
