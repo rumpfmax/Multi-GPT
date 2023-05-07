@@ -61,7 +61,7 @@ def prompt_user(cfg, multi_agent_manager):
                         multi_agent_manager.create_agent(expert)
                     return
             elif loading.upper() == "N":
-                pass
+                experts = []
             else:
                 exit(1)
 
