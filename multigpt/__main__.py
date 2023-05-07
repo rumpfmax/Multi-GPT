@@ -14,7 +14,6 @@ def main() -> None:
     check_openai_api_key()
     parse_arguments()
     logger.set_level(logging.DEBUG if cfg.debug_mode else logging.INFO)
-
     multi_agent_manager = MultiAgentManager(cfg)
 
     prompt_user(cfg, multi_agent_manager)

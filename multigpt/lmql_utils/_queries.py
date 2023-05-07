@@ -24,7 +24,7 @@ async def generate_trait_profile(name):
     '''
 
 @lmql.query
-async def generate_experts(task, min_experts, max_experts):
+async def generate_experts(task, min_experts, max_experts, llm_model):
     '''
     argmax(max_len=2000)
     """
@@ -37,7 +37,7 @@ async def generate_experts(task, min_experts, max_experts):
         [RESULT]
     """
     from
-        'openai/gpt-4'
+        llm_model
     '''
 
 
@@ -76,7 +76,7 @@ async def classify_emotion(message):
 
 
 @lmql.query
-async def create_chat_completion_gpt4(messages):
+async def create_chat_completion(messages, llm_model):
     '''
     argmax
         for message in messages:
@@ -138,76 +138,7 @@ async def create_chat_completion_gpt4(messages):
             else:
                 assert False, "not a supported type" + str(t)
     from
-       'openai/gpt-4'
-    where
-       STOPS_AT(STRING_VALUE, '\"') and STOPS_AT(INT_VALUE, ",") and INT(INT_VALUE)
-    '''
-
-
-@lmql.query
-async def create_chat_completion_gpt3(messages):
-    '''
-    argmax
-        for message in messages:
-            if message['role'] == 'system':
-                "{:system} {message['content']}"
-            elif message['role'] == 'user':
-                "{:user} {message['content']}"
-            elif message['role'] == 'assistant':
-                "{:assistant} {message['content']}"
-            else:
-                assert False, "not a supported role " + str(role)
-        schema = {
-            "thoughts": {
-                "text": str,
-                "reasoning": str,
-                "plan": str,
-                "criticism": str,
-                "speak": str
-            },
-            "command": {
-                "name": str,
-                "args": {
-                    "[STRING_VALUE]" : str
-                }
-            }
-        }
-        stack = [("", schema)]
-        indent = ""
-        dq = '"'
-        while len(stack) > 0:
-            t = stack.pop(0)
-            if type(t) is tuple:
-                k, key_type = t
-                if k != "":
-                    "{indent}{dq}{k}{dq}: "
-                if key_type is str:
-                     if stack[0] == "DEDENT":
-                        '"[STRING_VALUE]\n'
-                     else:
-                        '"[STRING_VALUE],\n'
-                elif key_type is int:
-                     if stack[0] == "DEDENT":
-                        "[INT_VALUE]\n"
-                     else:
-                        "[INT_VALUE],\n"
-                elif type(key_type) is dict:
-                    "{{\n"
-                    indent += "    "
-                    if len(stack) == 0 or stack[0] == "DEDENT":
-                        stack = [(k, key_type[k]) for k in key_type.keys()] + ["DEDENT", "}\n"] + stack
-                    else:
-                        stack = [(k, key_type[k]) for k in key_type.keys()] + ["DEDENT", "},\n"] + stack
-                else:
-                    assert False, "not a supported type " + str(k)
-            elif t == "DEDENT":
-                indent = indent[:-4]
-            elif type(t) is str:
-                "{indent}{t}"
-            else:
-                assert False, "not a supported type" + str(t)
-    from
-       'openai/gpt-3.5-turbo'
+       llm_model
     where
        STOPS_AT(STRING_VALUE, '\"') and STOPS_AT(INT_VALUE, ",") and INT(INT_VALUE)
     '''

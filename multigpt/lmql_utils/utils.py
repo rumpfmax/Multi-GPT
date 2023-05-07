@@ -136,7 +136,7 @@ def lmql_chat_with_ai(
 
 def lmql_generate_experts(task, min_experts, max_experts):
     async def _query_generate_experts():
-        result = (await _queries.generate_experts(task, min_experts, max_experts))
+        result = (await _queries.generate_experts(task, min_experts, max_experts, f'openai/{cfg.smart_llm_model}'))
         return result
 
     loop = asyncio.get_event_loop()
@@ -144,12 +144,9 @@ def lmql_generate_experts(task, min_experts, max_experts):
     return _parse_experts(lmql_result[0].variables['RESULT'])
 
 
-def lmql_create_chat_completion(model="gpt-3.5-turbo", messages=None, max_tokens=0):
+def lmql_create_chat_completion(model, messages=None, max_tokens=0):
     async def _query_chat_completion():
-        if model == "gpt-4":
-            return (await _queries.create_chat_completion_gpt4(messages))[0].prompt
-        else:
-            return (await _queries.create_chat_completion_gpt3(messages))[0].prompt
+        return (await _queries.create_chat_completion(messages, f'openai/{model}'))[0].prompt
 
     loop = asyncio.get_event_loop()
     chat_completion = loop.run_until_complete(_query_chat_completion())
