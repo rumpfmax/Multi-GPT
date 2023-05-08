@@ -27,10 +27,8 @@ isort
 gitpython==3.1.31
 regex~=2023.3.23
 python-slugify~=8.0.1
-pytest~=7.1.2
+pytest
 pytest-mock
-tweepy~=4.13.0
+tweepy
 lmql==0.0.5.1
-pathlib~=1.0.1
-yaml~=0.2.5
 langchain~=0.0.161
