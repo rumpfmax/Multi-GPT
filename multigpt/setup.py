@@ -3,7 +3,10 @@ import glob
 import os
 
 from colorama import Fore
+from langchain.chains import TransformChain, SequentialChain
+
 from autogpt import utils
+from multigpt import langchain_utils
 from autogpt.spinner import Spinner
 from multigpt import lmql_utils
 from multigpt.agent_traits import AgentTraits
@@ -53,7 +56,8 @@ def prompt_user(cfg, multi_agent_manager):
                         "\nTrait profile:", Fore.RED,
                         str(expert.ai_traits), speak_text=True
                     )
-                additional_agents = utils.clean_input("Do you want to create additional agents with a new task that join the discussion? [Y/n]: ")
+                additional_agents = utils.clean_input(
+                    "Do you want to create additional agents with a new task that join the discussion? [Y/n]: ")
                 if additional_agents.upper() == "Y":
                     pass
                 else:
@@ -75,31 +79,31 @@ def prompt_user(cfg, multi_agent_manager):
     if task == "":
         task = "Achieve world domination!"
 
-    with Spinner("Gathering group of experts... "):
-        experts_parsed = lmql_utils.lmql_generate_experts(task=task, min_experts=cfg.min_experts, max_experts=cfg.max_experts)
+    # This chain is just temporary until lmql chains work again
+    generate_experts_chain = TransformChain(input_variables=["task", "min_experts", "max_experts", "llm_model"],
+                                            output_variables=["RESULT"],
+                                            transform=langchain_utils.transform_generate_experts_temporary_fix)
+
+    parse_experts_chain = TransformChain(input_variables=["RESULT"], output_variables=["expert_tuples"],
+                                         transform=langchain_utils.transform_parse_experts)
+
+    add_trait_profiles_chain = TransformChain(input_variables=["expert_tuples"],
+                                              output_variables=["expert_tuples_w_traits"],
+                                              transform=langchain_utils.transform_add_trait_profiles)
+
+    transform_into_agents_chain = TransformChain(input_variables=["expert_tuples_w_traits"],
+                                                 output_variables=["agents"],
+                                                 transform=langchain_utils.transform_into_agents)
+
+    task_to_agents_chain = SequentialChain(
+        chains=[generate_experts_chain, parse_experts_chain, add_trait_profiles_chain,
+                transform_into_agents_chain],
+        input_variables=["task", "min_experts", "max_experts", "llm_model"],
+        output_variables=["agents"], verbose=True)
 
     logger.typewriter_log(f"Using Browser:", Fore.GREEN, cfg.selenium_web_browser)
-    for name, description, goals in experts_parsed:
-
-        with Spinner(f"Generating trait profile for {name}... "):
-            traits_list = list(lmql_utils.lmql_generate_trait_profile(name).values())
-            expert_traits = AgentTraits(*traits_list)
-
-        experts.append(Expert(name, description, goals, expert_traits))
-        logger.typewriter_log(
-            f"{name}", Fore.BLUE,
-            f"{description}", speak_text=True
-        )
-        goals_str = ""
-        for i, goal in enumerate(goals):
-            goals_str += f"{i + 1}. {goal}\n"
-        logger.typewriter_log(
-            f"Goals:", Fore.GREEN, goals_str
-        )
-        logger.typewriter_log(
-            "\nTrait profile:", Fore.RED,
-            str(expert_traits), speak_text=True
-        )
-
+    result = task_to_agents_chain(
+        dict(task=task, min_experts=cfg.min_experts, max_experts=cfg.max_experts, llm_model=cfg.smart_llm_model))
+    experts += result['agents']
     for expert in experts:
         multi_agent_manager.create_agent(expert)
