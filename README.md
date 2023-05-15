@@ -1,5 +1,7 @@
 # Multi-GPT: Multiple Collaborating ExpertGPTs
 
+##⚠️ IMPORTANT: Are you excited about the LLM/AI space? We want to hear from you! Click here to learn more: https://tally.so/r/mRdMov
+
 > ***”Individually, we are one drop. Together, we are an ocean.”*** - Ryunosuke Satoro
 >
 
